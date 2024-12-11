@@ -1,0 +1,3 @@
+﻿Is the following funny?
+
+output-value

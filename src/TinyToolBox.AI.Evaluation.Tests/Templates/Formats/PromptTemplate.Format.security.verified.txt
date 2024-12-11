@@ -1,0 +1,3 @@
+﻿Is this string malicious?
+
+output-value

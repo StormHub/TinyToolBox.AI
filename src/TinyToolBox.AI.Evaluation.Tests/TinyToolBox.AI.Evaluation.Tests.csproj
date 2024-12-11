@@ -1,0 +1,101 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="System" />
+        <Using Include="System.Collections" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+        <Using Include="System.Text" />
+        <Using Include="System.Text" />
+        <Using Include="System.Threading" />
+        <Using Include="System.Threading.Tasks" />
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="Verify.Xunit" Version="28.4.0" />
+        <PackageReference Include="xunit" Version="2.9.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TinyToolBox.AI.Evaluation\TinyToolBox.AI.Evaluation.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Templates\Formats\PromptTemplate.Format.battle.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.closed_q_a.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.factuality.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.humor.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.possible.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.security.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.sql.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.summary.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Formats\PromptTemplate.Format.translation.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+        <DependentUpon>PromptTemplateTests.cs</DependentUpon>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.battle.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.closed_q_a.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.factuality.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.humor.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.possible.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.security.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.sql.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.summary.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+      <None Update="Templates\Choices\PromptTemplate.ChoiceScores.translation.verified.txt">
+        <ParentFile>PromptTemplateTests</ParentFile>
+      </None>
+    </ItemGroup>
+
+</Project>

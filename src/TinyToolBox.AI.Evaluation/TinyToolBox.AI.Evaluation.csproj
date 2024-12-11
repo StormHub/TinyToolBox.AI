@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <Using Include="System" />
+        <Using Include="System.Collections" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+        <Using Include="System.Text" />
+        <Using Include="System.Text" />
+        <Using Include="System.Threading" />
+        <Using Include="System.Threading.Tasks" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <EmbeddedResource Include="Templates\battle.yaml" />
+        <EmbeddedResource Include="Templates\closed_q_a.yaml" />
+        <EmbeddedResource Include="Templates\factuality.yaml" />
+        <EmbeddedResource Include="Templates\humor.yaml" />
+        <EmbeddedResource Include="Templates\possible.yaml" />
+        <EmbeddedResource Include="Templates\security.yaml" />
+        <EmbeddedResource Include="Templates\sql.yaml" />
+        <EmbeddedResource Include="Templates\summary.yaml" />
+        <EmbeddedResource Include="Templates\translation.yaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="YamlDotNet" Version="16.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />-->
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="TinyToolBox.AI.Evaluation.Tests" />
+    </ItemGroup>
+
+</Project>
