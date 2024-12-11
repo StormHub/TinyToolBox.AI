@@ -2,9 +2,8 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using TinyToolBox.AI.Evaluation.Templates;
 
-namespace TinyToolBox.AI.Evaluation;
+namespace TinyToolBox.AI.Evaluation.Templates;
 
 internal sealed partial class PromptTemplate
 {

@@ -1,4 +1,4 @@
-namespace TinyToolBox.AI.Evaluation;
+namespace TinyToolBox.AI.Evaluation.Templates;
 
 internal readonly struct PromptTemplateParameter(int index, string name)
 {

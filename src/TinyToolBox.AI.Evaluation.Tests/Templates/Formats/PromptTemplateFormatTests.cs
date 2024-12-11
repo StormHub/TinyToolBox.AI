@@ -8,7 +8,7 @@ public sealed class PromptTemplateFormatTests
     [Fact]
     public async Task Format()
     {
-        foreach (var template in PromptTemplate.DefaultCollection())
+        foreach (var template in Evaluation.Templates.PromptTemplate.DefaultCollection())
         {
             var arguments = template.GetParameterNames()
                 .Select(x => new KeyValuePair<string, object>(x, $"{x}-value"))
@@ -16,7 +16,7 @@ public sealed class PromptTemplateFormatTests
             var result = template.Format(arguments);
 
             var setting = new VerifySettings();
-            setting.UseFileName($"{nameof(PromptTemplate)}.{nameof(Format)}.{template.Name}");
+            setting.UseFileName($"{nameof(Evaluation.Templates.PromptTemplate)}.{nameof(Format)}.{template.Name}");
             await Verifier.Verify(result, setting);
         }
     }
