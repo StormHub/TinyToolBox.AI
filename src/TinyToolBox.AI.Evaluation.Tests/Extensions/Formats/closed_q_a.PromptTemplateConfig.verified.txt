@@ -1,0 +1,11 @@
+﻿{
+  "name": "closed_q_a",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are assessing a submitted answer on a given task based on a criterion. Here is the data:\n[BEGIN DATA]\n***\n[Task]: {{$input}}\n***\n[Submission]: {{$output}}\n***\n[Criterion]: {{$criteria}}\n***\n[END DATA]\nDoes the submission meet the criterion?\nReturn a string of choices, e.g. Y or N",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

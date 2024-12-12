@@ -1,0 +1,11 @@
+﻿{
+  "name": "battle",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are comparing responses to the following instructions.\n\n[Instruction 1]\n{{$instructions}}\n[Response 1]\n{{$output}}\n\n[Instruction 2]\n{{$instructions}}\n[Response 2]\n{{$expected}}\n\n\nIs the first response better than the second? You must provide one answer based on your subjective view.\nReturn a string of choices, e.g. Yes or No",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

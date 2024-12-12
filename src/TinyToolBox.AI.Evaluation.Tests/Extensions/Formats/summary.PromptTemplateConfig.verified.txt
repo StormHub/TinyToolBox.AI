@@ -1,0 +1,11 @@
+﻿{
+  "name": "summary",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are comparing a submitted summary of a given text to an expert summary. Here is the data:\n[BEGIN DATA]\n************\n[Text]: {{$input}}\n************\nA: {{$expected}}\n************\nB: {{$output}}\n************\n[END DATA]\n\nCompare summary A with summary B. Ignore any differences in style, grammar, or punctuation.\nDetermine which summary better describes the original text.\nReturn a string of choices, e.g. A or B",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

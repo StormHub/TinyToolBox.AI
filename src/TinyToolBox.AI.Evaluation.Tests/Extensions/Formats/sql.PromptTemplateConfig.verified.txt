@@ -1,0 +1,11 @@
+﻿{
+  "name": "sql",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are comparing a submitted answer to an expert answer on a given SQL coding question. Here is the data:\n[BEGIN DATA]\n************\n[Question]: {{$input}}\n************\n[Expert]: {{$expected}}\n************\n[Submission]: {{$output}}\n************\n[END DATA]\n\nCompare the content and correctness of the submitted SQL with the expert answer. Ignore any differences in whitespace, style, or output column names.\nThe submitted answer may either be correct or incorrect. Determine which case applies. Answer the question by responding with one of the following:\n  \u0022Correct\u0022: The submitted SQL and the expert answer are semantically the same, i.e. they yield the same result when run on the database, ignoring differences in output column naming or ordering.\n  \u0022Incorrect\u0022: The submitted SQL and the expert answer are semantically different, i.e. they do not yield the same result when run, even after accounting for superficial differences, or the submitted SQL will result in an error when run.\nReturn a string of choices, e.g. Correct or Incorrect",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

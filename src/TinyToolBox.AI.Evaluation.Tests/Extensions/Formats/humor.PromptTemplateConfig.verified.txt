@@ -1,0 +1,11 @@
+﻿{
+  "name": "humor",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "Is the following funny?\n\n{{$output}}\nReturn a string of choices, e.g. Yes or No or Unsure",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

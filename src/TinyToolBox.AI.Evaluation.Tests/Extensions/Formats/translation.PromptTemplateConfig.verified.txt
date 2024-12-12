@@ -1,0 +1,11 @@
+﻿{
+  "name": "translation",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are comparing the submitted translation to an expert translation of a sentence from {{$language}} to English. Here is the data:\n[BEGIN DATA]\n************\n[Sentence]: {{$input}}\n************\n[Expert]: {{$expected}}\n************\n[Submission]: {{$output}}\n************\n[END DATA]\nDoes the submission answer and the expert\u0027s answer have the same meaning? Ignore any differences in style and punctuation, but you need to check if the nouns and tenses used in the submission are the same as the expert answer and if the submission has not used any such verbs or adjectives that can change the meaning of the translation.\nReturn a string of choices, e.g. Y or N",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

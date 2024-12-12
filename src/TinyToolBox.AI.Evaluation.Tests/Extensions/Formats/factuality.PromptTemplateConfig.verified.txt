@@ -1,0 +1,11 @@
+﻿{
+  "name": "factuality",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are comparing a submitted answer to an expert answer on a given question. Here is the data:\n[BEGIN DATA]\n************\n[Question]: {{$input}}\n************\n[Expert]: {{$expected}}\n************\n[Submission]: {{$output}}\n************\n[END DATA]\n\nCompare the factual content of the submitted answer with the expert answer. Ignore any differences in style, grammar, or punctuation.\nThe submitted answer may either be a subset or superset of the expert answer, or it may conflict with it. Determine which case applies. Answer the question by selecting one of the following options:\n(A) The submitted answer is a subset of the expert answer and is fully consistent with it.\n(B) The submitted answer is a superset of the expert answer and is fully consistent with it.\n(C) The submitted answer contains all the same details as the expert answer.\n(D) There is a disagreement between the submitted answer and the expert answer.\n(E) The answers differ, but these differences don\u0027t matter from the perspective of factuality.\nReturn a string of choices, e.g. A or B or C or D or E",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}

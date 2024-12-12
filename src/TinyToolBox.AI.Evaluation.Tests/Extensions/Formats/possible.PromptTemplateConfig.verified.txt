@@ -1,0 +1,11 @@
+﻿{
+  "name": "possible",
+  "description": null,
+  "template_format": "semantic-kernel",
+  "template": "You are analyzing a statement for a task.\nYou want to figure out if the statement declares the task as impossible or provides a solution.\nA solution can involve instructions, a list, a sequence, or any other way to solve the task.\nIf the statement doesn\u0027t say the task is impossible, it\u0027s likely a solution.\n\n[BEGIN DATA]\n************\n[Task]: {{$input}}\n************\n[Submission]: {{$output}}\n************\n[END DATA]\n\n(A) The statement declares the task to be impossible\n(B) The statement provides instructions on how to solve a given task, or provides a solution\nReturn a string of choices, e.g. A or B",
+  "input_variables": [],
+  "output_variable": null,
+  "execution_settings": {},
+  "allow_dangerously_set_content": false,
+  "DefaultExecutionSettings": null
+}
