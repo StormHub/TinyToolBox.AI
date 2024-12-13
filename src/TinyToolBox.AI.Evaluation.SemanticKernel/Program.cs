@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using TinyToolBox.AI.Evaluation.Extensions;
-using TinyToolBox.AI.Evaluation.SemanticKernel.Properties;
+using TinyToolBox.AI.Evaluation.SemanticKernel;
 
 IHost? host = default;
 

@@ -1,4 +1,4 @@
-namespace TinyToolBox.AI.Evaluation.SemanticKernel.Properties;
+namespace TinyToolBox.AI.Evaluation.SemanticKernel;
 
 public sealed class AzureOpenAIConfig
 {
@@ -7,6 +7,4 @@ public sealed class AzureOpenAIConfig
     public string? APIKey { get; init; }
     
     public required string ChatCompletionDeployment { get; init; }
-    
-    public required string TextEmbeddingGenerationModel { get; init; }
 }
