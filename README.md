@@ -35,10 +35,10 @@ var json =
     }
     """;
 await foreach (var result in 
-         kernel.Run(json, executionSettings: executionSettings, cancellationToken: lifetime.ApplicationStopping))
+          kernel.Run(json, executionSettings: executionSettings))
 {
     Console.WriteLine($"[{result.Key}]: result: {result.Value?.Item1}, score: {result.Value?.Item2}");
 }
 ```
 
-Complete example [here](https://github.com/StormHub/TinyToolBox.AI/blob/main/src/TinyToolBox.AI.Evaluation.SemanticKernel/Program.cs)
+Complete example [here](https://github.com/StormHub/TinyToolBox.AI/blob/main/src/TinyToolBox.AI.Evaluation.SemanticKernel/Program.cs#L73)
