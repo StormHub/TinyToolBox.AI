@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using TinyToolBox.AI.Evaluation.Extensions;
 using TinyToolBox.AI.Evaluation.SemanticKernel.Properties;
 
@@ -56,10 +56,7 @@ try
 
                 return builder.Build();
             });
-            
-            
-        })
-        .Build();
+        }).Build();
 
     await host.StartAsync();
 
@@ -67,24 +64,23 @@ try
     await using (var scope = host.Services.CreateAsyncScope())
     {
         var kernel = scope.ServiceProvider.GetRequiredService<Kernel>();
-        var chatCompletion = kernel.GetRequiredService<IChatCompletionService>();
-        
-        var templateConfigurations = Templates.DefaultConfigurations().ToArray();
-        var templateConfig = templateConfigurations.First(x => string.Equals(x.Name, "humor"));
 
-        var factory = new KernelPromptTemplateFactory();
-        var template = factory.Create(templateConfig);
-        
-        var arguments = new KernelArguments
+        var executionSettings = new AzureOpenAIPromptExecutionSettings
         {
-            ["output"] = "Brown fox"
+            Temperature = 0
         };
 
-        var content = await template.RenderAsync(kernel, arguments, cancellationToken: lifetime.ApplicationStopping);
-        var chatHistory = new ChatHistory(content);
-        var answer = await chatCompletion.GetChatMessageContentAsync(chatHistory);
-
-        Console.WriteLine($"{answer}");
+        const string isThisFunny = "I am a brown fox";
+        var arguments = new KernelArguments(executionSettings)
+        {
+            ["output"] = isThisFunny
+        };
+        var result = await kernel.Invoke(
+            name: "humor",
+            arguments: arguments,
+            cancellationToken: lifetime.ApplicationStopping);
+        
+        Console.WriteLine($"humor [{isThisFunny}] : {result?.Item1} = {result?.Item2}");
     }
 
     lifetime.StopApplication();
