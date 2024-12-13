@@ -15,8 +15,8 @@ The LLM-as-a-Judge approach uses large language models (LLMs) to evaluate AI-gen
 - Translation
 - Fine-tuned binary classifiers
 
-## Example of quick test test AI application output
-Note that the name and parameters must match individual prompts.
+## Example of quick test of AI application output
+Note that the name and parameters must match individual prompts above.
 ```csharp
 // Setup semantic kernel with ChatCompletion first
 // Create PromptExecutionSettings and set 'Temperature'
@@ -31,7 +31,7 @@ var json =
             "input" : "What color was Cotton?",
             "output": "white",
             "expected": "white"
-            }
+        }
     }
     """;
 await foreach (var result in 
