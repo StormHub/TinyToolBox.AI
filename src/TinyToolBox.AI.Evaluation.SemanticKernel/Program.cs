@@ -71,17 +71,21 @@ try
         };
         
         const string isThisFunny = "I am a brown fox";
-        var results = await kernel.Run(
+        var json = 
             $$"""
-             {
-                 "humor" : {
-                    "output" : "{{isThisFunny}}"
-                 }
-             }
-             """, 
-            executionSettings, 
-            cancellationToken: lifetime.ApplicationStopping);
-        foreach (var result in results)
+            {
+                "humor" : {
+                   "output" : "{{isThisFunny}}"
+                },
+                "factuality" : {
+                   "input" : "What color was Cotton?",
+                   "output": "white",
+                   "expected": "white"
+                }
+            }
+            """;
+        await foreach (var result in 
+                       kernel.Run(json, executionSettings: executionSettings, cancellationToken: lifetime.ApplicationStopping))
         {
             Console.WriteLine($"[{result.Key}]: result: {result.Value?.Item1}, score: {result.Value?.Item2}");
         }

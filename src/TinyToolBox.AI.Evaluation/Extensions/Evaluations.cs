@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.SemanticKernel;
@@ -7,25 +8,25 @@ namespace TinyToolBox.AI.Evaluation.Extensions;
 
 public static partial class Evaluations
 {
-    public static async Task<IReadOnlyDictionary<string, (string, float)?>> Run(this Kernel kernel, 
+    public static async IAsyncEnumerable<KeyValuePair<string, (string, float)?>> Run(this Kernel kernel, 
         string json,
+        JsonSerializerOptions? options = null,
         PromptExecutionSettings? executionSettings = default,
         IPromptTemplateFactory? promptTemplateFactory = default, 
-        CancellationToken cancellationToken = default)
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var map = JsonSerializer.Deserialize<Dictionary<string, KernelArguments>>(json)
+        var map = JsonSerializer.Deserialize<Dictionary<string, KernelArguments>>(json, options)
             ?? throw new ArgumentException($"Invalid json string {json}", nameof(json));
         
         var configurations = PromptTemplateConfigurations()
             .ToDictionary(k => k.Name!, v => v);
-        
-        var results = new Dictionary<string, (string, float)?>();
         
         var settings = new Dictionary<string, PromptExecutionSettings>(StringComparer.OrdinalIgnoreCase);
         if (executionSettings is not null)
         {
             settings.Add(executionSettings.ServiceId ?? PromptExecutionSettings.DefaultServiceId, executionSettings);
         }
+        
         foreach (var name in map.Keys)
         {
             if (configurations.TryGetValue(name, out var promptTemplateConfig))
@@ -35,11 +36,9 @@ public static partial class Evaluations
                 
                 var functionResult = await kernel.InvokeAsync(function, arguments, cancellationToken);
                 var result = functionResult.ScoreResult();
-                results.Add(name, result);
+                yield return new KeyValuePair<string, (string, float)?>(name, result);
             }
         }
-
-        return results;
     }
     
     public static async Task<(string, float)?> Invoke(this Kernel kernel, 
