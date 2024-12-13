@@ -69,8 +69,24 @@ try
         {
             Temperature = 0
         };
-
+        
         const string isThisFunny = "I am a brown fox";
+        var results = await kernel.Run(
+            $$"""
+             {
+                 "humor" : {
+                    "output" : "{{isThisFunny}}"
+                 }
+             }
+             """, 
+            executionSettings, 
+            cancellationToken: lifetime.ApplicationStopping);
+        foreach (var result in results)
+        {
+            Console.WriteLine($"[{result.Key}]: result: {result.Value?.Item1}, score: {result.Value?.Item2}");
+        }
+
+        /*
         var arguments = new KernelArguments(executionSettings)
         {
             ["output"] = isThisFunny
@@ -79,8 +95,10 @@ try
             name: "humor",
             arguments: arguments,
             cancellationToken: lifetime.ApplicationStopping);
-        
+        // gtp-4o output
+        // No = 0
         Console.WriteLine($"humor [{isThisFunny}] : {result?.Item1} = {result?.Item2}");
+        */
     }
 
     lifetime.StopApplication();
