@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel;
 
-namespace TinyToolBox.AI.Agents;
+namespace TinyToolBox.AI.ChatCompletion.Cosmos;
 
 public sealed class CosmosChatHistoryStore
 {

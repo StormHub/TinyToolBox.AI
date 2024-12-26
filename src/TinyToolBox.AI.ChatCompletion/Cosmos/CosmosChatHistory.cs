@@ -1,6 +1,6 @@
 using Microsoft.Extensions.AI;
 
-namespace TinyToolBox.AI.Agents;
+namespace TinyToolBox.AI.ChatCompletion.Cosmos;
 
 internal record CosmosChatHistoryKey(string Id, string ThreadId);
 

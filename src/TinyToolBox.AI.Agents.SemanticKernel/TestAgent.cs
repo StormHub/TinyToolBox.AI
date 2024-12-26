@@ -4,6 +4,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using TinyToolBox.AI.ChatCompletion.Cosmos;
 
 namespace TinyToolBox.AI.Agents.SemanticKernel;
 
@@ -15,7 +16,6 @@ internal sealed class TestAgent
     private readonly Kernel _kernel;
     private readonly CosmosClient _client;
     private readonly CosmosChatHistoryStoreOptions _options;
-        
 
     public TestAgent(Kernel kernel, CosmosClient client)
     {

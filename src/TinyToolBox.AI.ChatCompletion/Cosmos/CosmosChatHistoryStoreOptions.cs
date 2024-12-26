@@ -1,4 +1,4 @@
-namespace TinyToolBox.AI.Agents;
+namespace TinyToolBox.AI.ChatCompletion.Cosmos;
 
 public sealed class CosmosChatHistoryStoreOptions
 {

@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TinyToolBox.AI.Agents\TinyToolBox.AI.Agents.csproj" />
+      <ProjectReference Include="..\TinyToolBox.AI.ChatCompletion\TinyToolBox.AI.ChatCompletion.csproj" />
     </ItemGroup>
 
 </Project>

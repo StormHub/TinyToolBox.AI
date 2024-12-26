@@ -9,7 +9,7 @@ using TextContent = Microsoft.SemanticKernel.TextContent;
 
 // ReSharper disable RedundantNameQualifier
 
-namespace TinyToolBox.AI.Agents;
+namespace TinyToolBox.AI.ChatCompletion.Cosmos;
 
 internal static class ChatHistoryExtensions
 {
