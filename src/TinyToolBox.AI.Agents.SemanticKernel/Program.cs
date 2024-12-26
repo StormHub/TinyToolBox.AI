@@ -95,7 +95,7 @@ try
                 return builder.Build();
             });
 
-            services.AddTransient<TestAgent>();
+            services.AddTransient<CosmosChatHistoryTestAgent>();
         }).Build();
 
     await host.StartAsync();
@@ -103,7 +103,7 @@ try
     var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
     await using (var scope = host.Services.CreateAsyncScope())
     {
-        var testAgent = scope.ServiceProvider.GetRequiredService<TestAgent>();
+        var testAgent = scope.ServiceProvider.GetRequiredService<CosmosChatHistoryTestAgent>();
         await testAgent.Run(lifetime.ApplicationStopping);
     }
 

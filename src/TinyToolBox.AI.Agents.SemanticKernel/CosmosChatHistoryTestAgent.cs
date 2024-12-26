@@ -8,7 +8,7 @@ using TinyToolBox.AI.ChatCompletion.Cosmos;
 
 namespace TinyToolBox.AI.Agents.SemanticKernel;
 
-internal sealed class TestAgent
+internal sealed class CosmosChatHistoryTestAgent
 {
     private const string Name = "Host";
     private const string Instructions = "Answer questions about the menu.";
@@ -17,7 +17,7 @@ internal sealed class TestAgent
     private readonly CosmosClient _client;
     private readonly CosmosChatHistoryStoreOptions _options;
 
-    public TestAgent(Kernel kernel, CosmosClient client)
+    public CosmosChatHistoryTestAgent(Kernel kernel, CosmosClient client)
     {
         _kernel = kernel;
         _client = client;
