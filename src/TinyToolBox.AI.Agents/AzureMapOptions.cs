@@ -1,6 +1,6 @@
-﻿namespace TinyToolBox.AI.Agents.Maps;
+﻿namespace TinyToolBox.AI.Agents;
 
-public sealed class MapOptions
+public sealed class AzureMapOptions
 {
     public string? ApiKey { get; init; }
 
