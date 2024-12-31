@@ -13,8 +13,8 @@ internal static class ConfigurationExtensions
     public static IServiceCollection UseCosmosHistory(this IServiceCollection services, IConfiguration configuration)
     {
         var cosmosDbConfig = configuration
-            .GetSection(nameof(AzureCosmosDbConfig))
-            .Get<AzureCosmosDbConfig>()
+            .GetSection(nameof(AzureCosmosOptions))
+            .Get<AzureCosmosOptions>()
             ?? throw new InvalidOperationException("Azure CosmosDB configuration required");
 
         // CosmosClient configuration
