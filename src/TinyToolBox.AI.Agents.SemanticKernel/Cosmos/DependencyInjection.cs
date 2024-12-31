@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace TinyToolBox.AI.Agents.SemanticKernel.Cosmos;
 
-internal static class ConfigurationExtensions
+internal static class DependencyInjection
 {
     public static IServiceCollection UseCosmosHistory(this IServiceCollection services, IConfiguration configuration)
     {

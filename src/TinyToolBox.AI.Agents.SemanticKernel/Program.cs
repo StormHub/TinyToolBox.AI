@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SemanticKernel;
+using TinyToolBox.AI.Agents;
 using TinyToolBox.AI.ChatCompletion.SemanticKernel;
 
 IHost? host = default;
@@ -57,6 +58,8 @@ try
                 return builder.Build();
             });
 
+            services.AddMaps(builderContext.Configuration);
+            
             // services.UseCosmosHistory(builderContext.Configuration);
             // services.AddTransient<CosmosChatHistoryTestAgent>();
         }).Build();

@@ -6,7 +6,7 @@ using Microsoft.SemanticKernel;
 
 namespace TinyToolBox.AI.Agents.Maps;
 
-public sealed class MapPlugin(MapsSearchClient mapsSearchClient)
+internal sealed class MapPlugin(MapsSearchClient mapsSearchClient)
 {
     private const int DefaultResultSize = 5;
 
