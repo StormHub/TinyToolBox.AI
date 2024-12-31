@@ -1,4 +1,4 @@
-namespace TinyToolBox.AI.ChatCompletion.SemanticKernel;
+namespace TinyToolBox.AI.Agents.SemanticKernel.Cosmos;
 
 public sealed class AzureCosmosDbConfig
 {

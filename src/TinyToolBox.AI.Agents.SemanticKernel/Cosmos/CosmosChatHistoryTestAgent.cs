@@ -6,7 +6,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using TinyToolBox.AI.ChatCompletion.Cosmos;
 
-namespace TinyToolBox.AI.Agents.SemanticKernel;
+namespace TinyToolBox.AI.Agents.SemanticKernel.Cosmos;
 
 internal sealed class CosmosChatHistoryTestAgent
 {
@@ -52,8 +52,11 @@ internal sealed class CosmosChatHistoryTestAgent
         var plugin = KernelPluginFactory.CreateFromType<MenuPlugin>();
         agent.Kernel.Plugins.Add(plugin);
 
+        var day = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = day.ToString("yyyy-MM-dd");
+        
         var chatHistory = new ChatHistory();
-        await foreach (var message in historyStore.Get("2024-12-26", "menu", cancellationToken))
+        await foreach (var message in historyStore.Get(today, "menu", cancellationToken))
         {
             chatHistory.Add(message);
         }
@@ -68,7 +71,7 @@ internal sealed class CosmosChatHistoryTestAgent
         Console.WriteLine($"{agent.GetType().FullName} completed");
     }
 
-    private async Task InvokeAgent(ChatCompletionAgent agent, ChatHistory chatHistory, string input, CancellationToken cancellationToken)
+    private static async Task InvokeAgent(ChatCompletionAgent agent, ChatHistory chatHistory, string input, CancellationToken cancellationToken)
     {
         ChatMessageContent message = new(AuthorRole.User, input);
         chatHistory.Add(message);
