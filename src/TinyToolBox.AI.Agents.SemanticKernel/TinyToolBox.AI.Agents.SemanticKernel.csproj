@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UserSecretsId>1D36513C-4845-4C9A-864C-564F9ED957AC</UserSecretsId>
-        <NoWarn>SKEXP0001, SKEXP0110, SKEXP0110</NoWarn>
+        <NoWarn>SKEXP0001, SKEXP0110, SKEXP0110, SKEXP0080, SKEXP0120, SKEXP0050</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -35,7 +35,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.32.0-alpha"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Process.LocalRuntime" Version="1.32.0-alpha" />
     </ItemGroup>
 
     <ItemGroup>

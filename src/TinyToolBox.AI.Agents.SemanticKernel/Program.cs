@@ -1,10 +1,10 @@
-﻿
-using Azure.Identity;
+﻿using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SemanticKernel;
 using TinyToolBox.AI.Agents;
+using TinyToolBox.AI.Agents.Search;
 using TinyToolBox.AI.ChatCompletion.SemanticKernel;
 
 IHost? host = default;
@@ -23,13 +23,14 @@ try
         })
         .ConfigureServices((builderContext, services) =>
         {
+            services.AddSearch(builderContext.Configuration);
+
             var openAIConfig = builderContext.Configuration
                 .GetSection(nameof(AzureOpenAIConfig))
                 .Get<AzureOpenAIConfig>()
                 ?? throw new InvalidOperationException("Azure OpenAI configuration required");
 
             services.AddHttpClient(nameof(AzureOpenAIConfig));
-
             services.AddTransient(provider =>
             {
                 var factory = provider.GetRequiredService<IHttpClientFactory>();
@@ -55,22 +56,24 @@ try
                         httpClient: httpClient);
                 }
 
-                return builder.Build();
+                builder.UseSearch(provider);
+
+                return builder;
             });
 
-            services.AddMaps(builderContext.Configuration);
-            
-            // services.UseCosmosHistory(builderContext.Configuration);
-            // services.AddTransient<CosmosChatHistoryTestAgent>();
         }).Build();
 
     await host.StartAsync();
 
+    
     var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
     await using (var scope = host.Services.CreateAsyncScope())
     {
-        // var testAgent = scope.ServiceProvider.GetRequiredService<CosmosChatHistoryTestAgent>();
-        // await testAgent.Run(lifetime.ApplicationStopping);
+        var kernelBuilder = scope.ServiceProvider.GetRequiredService<IKernelBuilder>();
+        var process = ResearchProcessBuilder.Build(kernelBuilder);
+        
+        var kernel = kernelBuilder.Build();
+        await process.StartAsync(kernel, new KernelProcessEvent { Id = "UserStep" });
     }
 
     lifetime.StopApplication();

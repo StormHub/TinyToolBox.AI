@@ -4,7 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>SKEXP0001, SKEXP0110</NoWarn>
+        <NoWarn>SKEXP0001, SKEXP0110, SKEXP0080, SKEXP0010, SKEXP0050</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,16 +20,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Maps.Routing" Version="1.0.0-beta.4" />
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.ML.Tokenizers" Version="1.0.0" />
+        <PackageReference Include="Microsoft.ML.Tokenizers.Data.O200kBase" Version="1.0.0" />
         <PackageReference Include="Microsoft.SemanticKernel" Version="1.32.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.32.0-alpha"/>
         <PackageReference Include="Azure.Identity" Version="1.13.1"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
-        <PackageReference Include="Azure.Maps.Search" Version="2.0.0-beta.4" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.32.0-alpha"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.32.0-alpha" />
+        <PackageReference Include="Microsoft.SemanticKernel.Process.Core" Version="1.32.0-alpha" />
+        <!--<PackageReference Include="Microsoft.SemanticKernel.Process.LocalRuntime" Version="1.32.0-alpha" />-->
     </ItemGroup>
 
 </Project>
