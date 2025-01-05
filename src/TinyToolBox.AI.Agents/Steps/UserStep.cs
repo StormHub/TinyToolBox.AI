@@ -3,7 +3,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace TinyToolBox.AI.Agents.Steps;
 
-internal record UserState
+public record UserState
 {
     public string Input { get; set; } = string.Empty;
     

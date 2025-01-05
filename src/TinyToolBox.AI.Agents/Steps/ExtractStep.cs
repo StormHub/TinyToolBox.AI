@@ -1,4 +1,3 @@
-using System.Net;
 using HtmlAgilityPack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,48 +19,19 @@ internal sealed class ExtractStep : KernelProcessStep
         CancellationToken cancellationToken = default)
     {
         var logger = kernel.LoggerFactory.CreateLogger(typeof(ExtractStep));
-        
-        var handler = new HttpClientHandler
-        {
-            AllowAutoRedirect = true,
-            AutomaticDecompression = DecompressionMethods.All
-        };
-        var httpClient = new HttpClient(handler);
-        httpClient.DefaultRequestHeaders.Add(
-            "User-Agent", 
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36");
-        httpClient.DefaultRequestHeaders.Add(
-            "Accept", 
-            "text/html");
-        httpClient.DefaultRequestHeaders.Add(
-            "Accept-encoding",
-            "gzip, deflate, br");
-        httpClient.DefaultRequestHeaders.Add(
-            "Accept-language",
-            "en-GB,en");
-        
         var results = new Dictionary<Uri, string>();
-
+        
+        var web = new HtmlWeb();
         foreach (var searchResult in input)
         {
             Console.WriteLine($"Researcher > Extracting '{searchResult.Uri}'");
+            var document =
+                await web.LoadFromWebAsync(searchResult.Uri.ToString(), cancellationToken: cancellationToken);
+            logger.LogInformation("{Url} downloaded", searchResult.Uri);
 
-            var response = await httpClient.GetAsync(searchResult.Uri, cancellationToken);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStreamAsync(cancellationToken);
-                var document = new HtmlDocument();
-                document.Load(content);
-               
-                var text = document.DocumentNode.InnerText.Trim();
-                var summary = await Summarize(text, kernel, cancellationToken);
-                results.Add(searchResult.Uri, summary);
-            }
-            else
-            {
-                logger.LogWarning("Unable to get {Uri} {StatusCode}", searchResult.Uri, response.StatusCode);
-                results.Add(searchResult.Uri, searchResult.Description);
-            }
+            Console.WriteLine($"Researcher > Summarizing '{searchResult.Uri}'");
+            var summary = await Summarize(document.DocumentNode.InnerText, kernel, cancellationToken);
+            results.Add(searchResult.Uri, summary);
         }
         
         await context.EmitEventAsync(

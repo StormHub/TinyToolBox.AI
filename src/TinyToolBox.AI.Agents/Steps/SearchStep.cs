@@ -4,9 +4,9 @@ using Microsoft.SemanticKernel.Plugins.Web.Bing;
 
 namespace TinyToolBox.AI.Agents.Steps;
 
-internal record SearchResult(Uri Uri, string Title, string Description);
+public record SearchResult(Uri Uri, string Title, string? Description);
 
-internal record SearchStepState
+public record SearchStepState
 {
     public List<SearchResult> Results { get; init; } = [];
 }
@@ -55,21 +55,12 @@ internal sealed class SearchStep : KernelProcessStep<SearchStepState>
         {
             if (result is BingWebPage webPage)
             {
-                if (!Uri.TryCreate(webPage.Url, UriKind.Absolute, out var uri))
+                if (!Uri.TryCreate(webPage.Url, UriKind.Absolute, out var uri) 
+                    || string.IsNullOrEmpty(webPage.Name))
                 {
                     continue;
                 }
-
-                if (string.IsNullOrEmpty(webPage.Name))
-                {
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(webPage.Snippet))
-                {
-                    continue;
-                }
-
+                
                 searchResults.Add(new SearchResult(uri, webPage.Name, webPage.Snippet));
             }
         }
