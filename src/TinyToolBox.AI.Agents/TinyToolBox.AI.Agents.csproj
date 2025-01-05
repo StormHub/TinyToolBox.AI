@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
+        <PackageReference Include="HtmlAgilityPack.CssSelectors.NetCore" Version="1.2.1" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0"/>
         <PackageReference Include="Microsoft.ML.Tokenizers" Version="1.0.0" />
@@ -34,7 +35,6 @@
         <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.32.0-alpha"/>
         <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.32.0-alpha" />
         <PackageReference Include="Microsoft.SemanticKernel.Process.Core" Version="1.32.0-alpha" />
-        <!--<PackageReference Include="Microsoft.SemanticKernel.Process.LocalRuntime" Version="1.32.0-alpha" />-->
     </ItemGroup>
 
 </Project>

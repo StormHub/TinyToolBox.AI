@@ -1,9 +1,11 @@
 using HtmlAgilityPack;
+using HtmlAgilityPack.CssSelectors.NetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.ML.Tokenizers;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Text;
+
+using Tokenizer = Microsoft.ML.Tokenizers.Tokenizer;
 
 namespace TinyToolBox.AI.Agents.Steps;
 
@@ -25,12 +27,20 @@ internal sealed class ExtractStep : KernelProcessStep
         foreach (var searchResult in input)
         {
             Console.WriteLine($"Researcher > Extracting '{searchResult.Uri}'");
+            
             var document =
                 await web.LoadFromWebAsync(searchResult.Uri.ToString(), cancellationToken: cancellationToken);
             logger.LogInformation("{Url} downloaded", searchResult.Uri);
 
+            var text = GetContent(document.DocumentNode) 
+                       ?? searchResult.Description;
+            if (string.IsNullOrEmpty(text))
+            {
+                continue;
+            }
+
             Console.WriteLine($"Researcher > Summarizing '{searchResult.Uri}'");
-            var summary = await Summarize(document.DocumentNode.InnerText, kernel, cancellationToken);
+            var summary = await Summarize(text, kernel, cancellationToken);
             results.Add(searchResult.Uri, summary);
         }
         
@@ -40,6 +50,47 @@ internal sealed class ExtractStep : KernelProcessStep
                 Id = Done,
                 Data = results.AsReadOnly()
             });
+    }
+
+    private static string? GetContent(HtmlNode root)
+    {
+        // meta
+        var metaNodes = root.QuerySelectorAll("meta");
+        if (metaNodes.Count > 0)
+        {
+            foreach (var metaNode in metaNodes)
+            {
+                var attribute = metaNode.Attributes.FirstOrDefault(
+                    x => string.Equals(x.Name, "content", StringComparison.OrdinalIgnoreCase));
+                if (attribute is not null 
+                    && attribute.Value.Contains("noindex", StringComparison.OrdinalIgnoreCase))
+                {
+                    return default;
+                }
+            }
+        }
+        
+        // "article", "main"
+        var node = root.QuerySelector("article")
+                   ?? root.QuerySelector("main");
+        if (node is not null)
+        {
+            return node.InnerText;
+        }
+
+        // "content", "main-content", "post-content"
+        var nodes = root.QuerySelectorAll("content");
+        if (nodes.Count == 0)
+        {
+            nodes = root.QuerySelectorAll("main-content");
+        }
+        if (nodes.Count == 0)
+        {
+            nodes = root.QuerySelectorAll("post-content");
+        }
+        return nodes.Count > 0 
+            ? string.Join('\n', nodes.Select(x => x.InnerText))
+            : default;
     }
 
     private static async Task<string> Summarize(string text, Kernel kernel, CancellationToken cancellationToken = default)
