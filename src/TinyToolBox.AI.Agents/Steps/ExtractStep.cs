@@ -22,7 +22,7 @@ internal sealed class ExtractStep : KernelProcessStep
     {
         var logger = kernel.LoggerFactory.CreateLogger(typeof(ExtractStep));
         var results = new Dictionary<Uri, string>();
-        
+
         var web = new HtmlWeb();
         foreach (var searchResult in input)
         {

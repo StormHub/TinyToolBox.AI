@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Plugins.Web.Bing;
@@ -50,28 +51,46 @@ internal sealed class SearchStep : KernelProcessStep<SearchStepState>
             },
             cancellationToken);
 
-        var searchResults = new List<SearchResult>();
-        await foreach (var result in response.Results.WithCancellation(cancellationToken))
+        var searchResults = new Dictionary<Uri, SearchResult>();
+        await foreach (var result in AsPages(response.Results, cancellationToken))
         {
-            if (result is BingWebPage webPage)
-            {
-                if (!Uri.TryCreate(webPage.Url, UriKind.Absolute, out var uri) 
-                    || string.IsNullOrEmpty(webPage.Name))
+                if (!Uri.TryCreate(result.Url, UriKind.Absolute, out var uri) 
+                    || string.IsNullOrEmpty(result.Name) 
+                    || searchResults.ContainsKey(uri))
                 {
                     continue;
                 }
-                
-                searchResults.Add(new SearchResult(uri, webPage.Name, webPage.Snippet));
-            }
+
+                searchResults.Add(uri, new SearchResult(uri, result.Name, result.Snippet));
         }
         _state ??= new SearchStepState();
-        _state.Results.AddRange(searchResults);
+        _state.Results.AddRange(searchResults.Values);
         
         await context.EmitEventAsync(
             new KernelProcessEvent
             {
                 Id = Done,
-                Data = searchResults.AsReadOnly()
+                Data = _state.Results.AsReadOnly()
             });
+    }
+
+    private static async IAsyncEnumerable<BingWebPage> AsPages(IAsyncEnumerable<object> results, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        await foreach (var result in results.WithCancellation(cancellationToken))
+        {
+            if (result is BingWebPage bingWebPage)
+            {
+                yield return bingWebPage;
+
+                if (bingWebPage.IsNavigational.GetValueOrDefault() 
+                    && bingWebPage.DeepLinks is { Count: > 0 } )
+                {
+                    foreach (var link in bingWebPage.DeepLinks)
+                    {
+                        yield return link;
+                    }
+                }
+            }
+        }
     }
 }
