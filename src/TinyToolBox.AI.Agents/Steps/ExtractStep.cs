@@ -44,10 +44,16 @@ internal sealed class ExtractStep : KernelProcessStep
 
     private static async Task<string> Summarize(string text, Kernel kernel, CancellationToken cancellationToken = default)
     {
-        var lines = TextChunker.SplitPlainTextLines(text, maxTokensPerLine: 100);
-        var paragraphs = TextChunker.SplitPlainTextParagraphs(lines, maxTokensPerParagraph: 255);
-        
         var tokenizer = kernel.Services.GetRequiredService<Tokenizer>();
+        
+        var lines = TextChunker.SplitPlainTextLines(
+            text, 
+            maxTokensPerLine: 100, 
+            tokenCounter: input => tokenizer.CountTokens(input));
+        var paragraphs = TextChunker.SplitPlainTextParagraphs(
+            lines, 
+            maxTokensPerParagraph: 255,
+            tokenCounter: input => tokenizer.CountTokens(input));
 
         const string prompt =
             """
