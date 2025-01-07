@@ -11,6 +11,8 @@ IHost? host = default;
 
 try
 {
+    
+    
     host = Host.CreateDefaultBuilder(args)
         .ConfigureAppConfiguration((builderContext, builder) =>
         {

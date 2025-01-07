@@ -1,7 +1,6 @@
-using HtmlAgilityPack;
-using HtmlAgilityPack.CssSelectors.NetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Playwright;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Text;
 
@@ -23,25 +22,30 @@ internal sealed class ExtractStep : KernelProcessStep
         var logger = kernel.LoggerFactory.CreateLogger(typeof(ExtractStep));
         var results = new Dictionary<Uri, string>();
 
-        var web = new HtmlWeb();
-        foreach (var searchResult in input)
+        // var exitCode = Microsoft.Playwright.Program.Main(["install", "chromium"]);
+        using (var playwright = await Playwright.CreateAsync())
         {
-            Console.WriteLine($"Researcher > Extracting '{searchResult.Uri}'");
-            
-            var document =
-                await web.LoadFromWebAsync(searchResult.Uri.ToString(), cancellationToken: cancellationToken);
-            logger.LogInformation("{Url} downloaded", searchResult.Uri);
-
-            var text = GetContent(document.DocumentNode) 
-                       ?? searchResult.Description;
-            if (string.IsNullOrEmpty(text))
+            await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
+            foreach (var searchResult in input)
             {
-                continue;
+                // Console.WriteLine($"Researcher > Extracting '{searchResult.Uri}'");
+                var text = await GetContent(browser, searchResult.Uri, logger);
+                text = text?.Trim();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    Console.WriteLine($"{searchResult.Uri}\n{text}");
+                    results.Add(searchResult.Uri, text);
+                }
             }
+            await browser.CloseAsync();
+        }
 
-            Console.WriteLine($"Researcher > Summarizing '{searchResult.Uri}'");
-            var summary = await Summarize(text, kernel, cancellationToken);
-            results.Add(searchResult.Uri, summary);
+        var keys = results.Keys.ToArray();
+        foreach (var uri in keys)
+        {
+            Console.WriteLine($"Researcher > Summarizing '{uri}'");
+            var summary = await Summarize(results[uri], kernel, cancellationToken);
+            results[uri] = summary;
         }
         
         await context.EmitEventAsync(
@@ -52,46 +56,62 @@ internal sealed class ExtractStep : KernelProcessStep
             });
     }
 
-    private static string? GetContent(HtmlNode root)
+    private static async Task<string?> GetContent(IBrowser browser, Uri uri, ILogger logger)
     {
-        // meta
-        var metaNodes = root.QuerySelectorAll("meta");
-        if (metaNodes.Count > 0)
+        IPage? page = default;
+        try
         {
-            foreach (var metaNode in metaNodes)
+            page = await browser.NewPageAsync();
+            await page.GotoAsync(uri.ToString());
+            var handle = await page.QuerySelectorAsync("article")
+                         ?? await page.QuerySelectorAsync("main");
+            if (handle is not null)
             {
-                var attribute = metaNode.Attributes.FirstOrDefault(
-                    x => string.Equals(x.Name, "content", StringComparison.OrdinalIgnoreCase));
-                if (attribute is not null 
-                    && attribute.Value.Contains("noindex", StringComparison.OrdinalIgnoreCase))
+                return await handle.TextContentAsync();
+            }
+
+            // "content", "main-content", "post-content"
+            var elements = await page.QuerySelectorAllAsync("content");
+            if (elements.Count == 0)
+            {
+                elements = await page.QuerySelectorAllAsync("main-content");
+            }
+            if (elements.Count == 0)
+            {
+                elements = await page.QuerySelectorAllAsync("post-content");
+            }
+
+            var contents = elements.ToArray();
+            if (contents.Length > 0)
+            {
+                var buffer = new StringBuilder();
+                foreach (var content in contents)
                 {
-                    return default;
+                    var text = await content.TextContentAsync();
+                    text = text?.Trim();
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        buffer.AppendLine(text);
+                    }
                 }
+                return buffer.ToString();
             }
         }
-        
-        // "article", "main"
-        var node = root.QuerySelector("article")
-                   ?? root.QuerySelector("main");
-        if (node is not null)
+        catch (Exception ex)
         {
-            return node.InnerText;
+            logger.LogWarning(ex, "Unable to get {Url}", uri);
+        }
+        finally
+        {
+            if (page is not null)
+            {
+                await page.CloseAsync();
+            }
         }
 
-        // "content", "main-content", "post-content"
-        var nodes = root.QuerySelectorAll("content");
-        if (nodes.Count == 0)
-        {
-            nodes = root.QuerySelectorAll("main-content");
-        }
-        if (nodes.Count == 0)
-        {
-            nodes = root.QuerySelectorAll("post-content");
-        }
-        return nodes.Count > 0 
-            ? string.Join('\n', nodes.Select(x => x.InnerText))
-            : default;
+        return default;
     }
+
 
     private static async Task<string> Summarize(string text, Kernel kernel, CancellationToken cancellationToken = default)
     {
