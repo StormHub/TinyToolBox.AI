@@ -35,7 +35,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Process.LocalRuntime" Version="1.32.0-alpha" />
+        <PackageReference Include="Microsoft.SemanticKernel.Process.LocalRuntime" Version="1.33.0-alpha" />
     </ItemGroup>
 
     <ItemGroup>
