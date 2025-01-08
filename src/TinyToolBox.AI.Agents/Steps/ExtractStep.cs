@@ -22,13 +22,13 @@ internal sealed class ExtractStep : KernelProcessStep
         var logger = kernel.LoggerFactory.CreateLogger(typeof(ExtractStep));
         var results = new Dictionary<Uri, string>();
 
+        Console.WriteLine($"Researcher > Input search results : '{input.Count}'");
         // var exitCode = Microsoft.Playwright.Program.Main(["install", "chromium"]);
         using (var playwright = await Playwright.CreateAsync())
         {
             await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
             foreach (var searchResult in input)
             {
-                // Console.WriteLine($"Researcher > Extracting '{searchResult.Uri}'");
                 var text = await GetContent(browser, searchResult.Uri, logger);
                 text = text?.Trim();
                 if (!string.IsNullOrEmpty(text))

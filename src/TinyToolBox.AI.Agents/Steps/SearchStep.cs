@@ -35,7 +35,7 @@ internal sealed class SearchStep : KernelProcessStep<SearchStepState>
             await context.EmitEventAsync(
                 new KernelProcessEvent
                 {
-                    Id = "Exit"
+                    Id = ResearchProcess.Exit
                 });
             return;
         }

@@ -72,7 +72,7 @@ try
     await using (var scope = host.Services.CreateAsyncScope())
     {
         var kernelBuilder = scope.ServiceProvider.GetRequiredService<IKernelBuilder>();
-        var process = ResearchProcessBuilder.Build(kernelBuilder);
+        var process = ResearchProcess.Build();
         
         var kernel = kernelBuilder.Build();
         await process.StartAsync(kernel, new KernelProcessEvent { Id = "UserStep" });

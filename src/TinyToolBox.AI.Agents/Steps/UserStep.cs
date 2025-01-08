@@ -34,7 +34,7 @@ internal sealed class UserStep : KernelProcessStep<UserState>
             await context.EmitEventAsync(
                 new KernelProcessEvent
                 {
-                    Id = "Exit"
+                    Id = ResearchProcess.Exit
                 });
             return;
         }
