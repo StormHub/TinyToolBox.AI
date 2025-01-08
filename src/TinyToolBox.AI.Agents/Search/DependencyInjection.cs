@@ -16,7 +16,8 @@ public static class DependencyInjection
             .Get<AzureBingOptions>()
             ?? throw new InvalidOperationException("Azure bing search configuration required");
         
-        services.AddHttpClient(nameof(BingTextSearch));
+        services.AddHttpClient(nameof(BingTextSearch))
+            .AddStandardResilienceHandler();
         services.AddTransient(provider =>
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();

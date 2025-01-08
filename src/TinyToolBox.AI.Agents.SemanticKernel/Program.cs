@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.SemanticKernel;
 using TinyToolBox.AI.Agents;
 using TinyToolBox.AI.Agents.Search;
@@ -11,8 +12,6 @@ IHost? host = default;
 
 try
 {
-    
-    
     host = Host.CreateDefaultBuilder(args)
         .ConfigureAppConfiguration((builderContext, builder) =>
         {
@@ -32,7 +31,14 @@ try
                 .Get<AzureOpenAIConfig>()
                 ?? throw new InvalidOperationException("Azure OpenAI configuration required");
 
-            services.AddHttpClient(nameof(AzureOpenAIConfig));
+            services.AddHttpClient(nameof(AzureOpenAIConfig))
+                .AddStandardResilienceHandler()
+                .Configure(options =>
+                {
+                    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(10);
+                    options.Retry.MaxRetryAttempts = 10;
+                });
+            
             services.AddTransient(provider =>
             {
                 var factory = provider.GetRequiredService<IHttpClientFactory>();
@@ -67,7 +73,6 @@ try
 
     await host.StartAsync();
 
-    
     var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
     await using (var scope = host.Services.CreateAsyncScope())
     {
