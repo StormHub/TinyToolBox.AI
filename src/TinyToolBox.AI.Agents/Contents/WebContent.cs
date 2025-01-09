@@ -1,16 +1,16 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 
-namespace TinyToolBox.AI.Agents.Browsers;
+namespace TinyToolBox.AI.Agents.Contents;
 
-internal sealed class BrowserContext : IAsyncDisposable
+internal sealed class WebContent : IAsyncDisposable
 {
     private readonly IPlaywright _playwright;
     private readonly IBrowser _browser;
     private readonly IBrowserContext _browserContext;
     private readonly ILogger _logger;
     
-    private BrowserContext(
+    private WebContent(
         IPlaywright playwright, 
         IBrowser browser, 
         IBrowserContext browserContext, 
@@ -22,7 +22,7 @@ internal sealed class BrowserContext : IAsyncDisposable
         _logger = logger;
     }
 
-    public static async Task<BrowserContext> Create(ILogger logger)
+    public static async Task<WebContent> Create(ILogger logger)
     {
         // var exitCode = Microsoft.Playwright.Program.Main(["install", "chromium"]);
         var playwright = await Playwright.CreateAsync();
@@ -61,55 +61,26 @@ internal sealed class BrowserContext : IAsyncDisposable
             );
             """);
         
-        return new BrowserContext(playwright, browser, browserContext, logger);
+        return new WebContent(playwright, browser, browserContext, logger);
     }
 
     public async Task<string?> GetPageContent(Uri uri)
     {
-        IPage? page = default;
+        var url = uri.ToString();
+        if (url.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogError("Not supported content type {Url}", uri);
+            return default;
+        }
+        
+        // Default html
+        HtmlContent? pageContent = default;
         try
         {
-            page = await _browserContext.NewPageAsync();
-            var response = await page.GotoAsync(uri.ToString());
-            if (response is not null && response.Ok)
+            pageContent = await GotoHtmlPage(url);
+            if (pageContent is not null)
             {
-                var handle = await page.QuerySelectorAsync("article")
-                             ?? await page.QuerySelectorAsync("main");
-                if (handle is not null)
-                {
-                    return await handle.TextContentAsync();
-                }
-
-                // "content", "main-content", "post-content"
-                var elements = await page.QuerySelectorAllAsync("content");
-                if (elements.Count == 0)
-                {
-                    elements = await page.QuerySelectorAllAsync("main-content");
-                }
-                if (elements.Count == 0)
-                {
-                    elements = await page.QuerySelectorAllAsync("post-content");
-                }
-                
-                var contents = elements.ToArray();
-                if (contents.Length > 0)
-                {
-                    var buffer = new StringBuilder();
-                    foreach (var content in contents)
-                    {
-                        var text = await content.TextContentAsync();
-                        text = text?.Trim();
-                        if (!string.IsNullOrEmpty(text))
-                        {
-                            buffer.AppendLine(text);
-                        }
-                    }
-                    return buffer.ToString();
-                }
-            }
-            else
-            {
-                _logger.LogError("Unable to get content of {Url} {Status}", uri, response?.StatusText);
+                return await pageContent.Text();
             }
         }
         catch (Exception ex)
@@ -118,13 +89,32 @@ internal sealed class BrowserContext : IAsyncDisposable
         }
         finally
         {
-            if (page is not null)
+            if (pageContent is not null)
             {
-                await page.CloseAsync();
+                await pageContent.DisposeAsync();
             }
         }
 
         return default;
+    }
+
+    private async Task<HtmlContent?> GotoHtmlPage(string url)
+    {
+        var page = await _browserContext.NewPageAsync();
+        var response = await page.GotoAsync(
+            url: url,
+            new PageGotoOptions
+            {
+                WaitUntil = WaitUntilState.DOMContentLoaded
+            });
+        if (response is null || !response.Ok)
+        {
+            _logger.LogError("Unable to get content of {Url} {Status}", url, response?.StatusText);
+            return default;
+        }
+
+        _logger.LogInformation("{Url} DOMContentLoaded", url);
+        return new HtmlContent(page);
     }
 
     public async ValueTask DisposeAsync()

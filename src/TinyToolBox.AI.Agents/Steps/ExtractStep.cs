@@ -2,8 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Text;
-using TinyToolBox.AI.Agents.Browsers;
-
+using TinyToolBox.AI.Agents.Contents;
 using Tokenizer = Microsoft.ML.Tokenizers.Tokenizer;
 
 namespace TinyToolBox.AI.Agents.Steps;
@@ -23,15 +22,15 @@ internal sealed class ExtractStep : KernelProcessStep
         var results = new Dictionary<Uri, string>();
 
         Console.WriteLine($"Researcher > Input search results : '{input.Count}'");
-        await using (var browserContent = await BrowserContext.Create(logger))
+        await using (var browserContent = await WebContent.Create(logger))
         {
             foreach (var searchResult in input)
             {
+                Console.WriteLine($"Researcher > Input : '{searchResult.Uri}'");
                 var text = await browserContent.GetPageContent(searchResult.Uri);
                 text = text?.Trim();
                 if (!string.IsNullOrEmpty(text))
                 {
-                    Console.WriteLine($"{searchResult.Uri}\n{text}");
                     results.Add(searchResult.Uri, text);
                 }
             }
